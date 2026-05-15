@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Estoque</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black text-white p-6">
+
+      <h1 class="text-3xl font-bold mb-10">
+        Controle
+      </h1>
+
+      <div class="flex flex-col gap-3">
+
+        <a
+          href="compras.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          🛒 Compras
+        </a>
+
+        <a
+          href="vendas.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💰 Vendas
+        </a>
+
+        <a
+          href="index.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          📊 Análises
+        </a>
+
+        <a
+          href="reclamacoes.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💬 Reclamações
+        </a>
+
+        <a
+          href="estoque.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📦 Estoque
+        </a>
+
+      </div>
+
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-10">
+
+      <!-- TÍTULO -->
+      <div class="mb-8">
+
+        <h2 class="text-4xl font-bold text-gray-800">
+          Controle de Estoque
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Controle produção e estoque automaticamente.
+        </p>
+
+      </div>
+
+      <!-- RECEITA PADRÃO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <div class="flex items-center justify-between mb-6">
+
+          <div>
+
+            <h3 class="text-2xl font-semibold">
+              Receita padrão
+            </h3>
+
+            <p class="text-gray-500 mt-1">
+              Receita usada para descontar ingredientes automaticamente.
+            </p>
+
+          </div>
+
+          <div class="bg-black text-white px-5 py-3 rounded-2xl">
+            Brownie
+          </div>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full">
+
+            <thead>
+
+              <tr class="border-b border-gray-200 text-left text-gray-500">
+
+                <th class="pb-4">Ingrediente</th>
+                <th class="pb-4">Quantidade</th>
+                <th class="pb-4">Unidade</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr class="border-b border-gray-100">
+                <td class="py-5">Açúcar</td>
+                <td class="py-5">380</td>
+                <td class="py-5">g</td>
+              </tr>
+
+              <tr class="border-b border-gray-100">
+                <td class="py-5">Ovo</td>
+                <td class="py-5">5</td>
+                <td class="py-5">un</td>
+              </tr>
+
+              <tr class="border-b border-gray-100">
+                <td class="py-5">Óleo</td>
+                <td class="py-5">220</td>
+                <td class="py-5">ml</td>
+              </tr>
+
+              <tr class="border-b border-gray-100">
+                <td class="py-5">Chocolate ao leite</td>
+                <td class="py-5">150</td>
+                <td class="py-5">g</td>
+              </tr>
+
+              <tr class="border-b border-gray-100">
+                <td class="py-5">Chocolate 50%</td>
+                <td class="py-5">65</td>
+                <td class="py-5">g</td>
+              </tr>
+
+              <tr class="border-b border-gray-100">
+                <td class="py-5">Farinha</td>
+                <td class="py-5">120</td>
+                <td class="py-5">g</td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      <!-- PRODUÇÃO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Registrar produção
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- PRODUTO -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Produto
+            </label>
+
+            <input
+              type="text"
+              id="produto"
+              value="Brownie"
+              class="w-full border border-gray-200 rounded-2xl p-4 bg-gray-100"
+              readonly
+            />
+
+          </div>
+
+          <!-- QUANTIDADE -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Quantidade produzida
+            </label>
+
+            <input
+              type="number"
+              id="quantidadeProduzida"
+              placeholder="Ex: 3"
+              class="w-full border border-gray-200 rounded-2xl p-4"
+            />
+
+          </div>
+
+        </div>
+
+        <button
+          onclick="registrarProducao()"
+          class="mt-6 bg-black text-white px-6 py-4 rounded-2xl hover:opacity-90 transition"
+        >
+          Registrar produção
+        </button>
+
+      </div>
+
+      <!-- ESTOQUE -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+        <div class="flex items-center justify-between mb-6">
+
+          <div>
+
+            <h3 class="text-2xl font-semibold">
+              Estoque atual
+            </h3>
+
+            <p class="text-gray-500 mt-1">
+              Quantidade restante dos ingredientes.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full">
+
+            <thead>
+
+              <tr class="border-b border-gray-200 text-left text-gray-500">
+
+                <th class="pb-4">Ingrediente</th>
+                <th class="pb-4">Quantidade atual</th>
+                <th class="pb-4">Status</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="tabelaEstoque">
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module">
+
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+    // FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+      authDomain: "controle-brownie.firebaseapp.com",
+      projectId: "controle-brownie",
+      storageBucket: "controle-brownie.firebasestorage.app",
+      messagingSenderId: "832308524637",
+      appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+      measurementId: "G-SG0D3YZX7J"
+    };
+
+    // INICIALIZA FIREBASE
+    const app = initializeApp(firebaseConfig);
+
+    // INICIALIZA FIRESTORE
+    const db = getFirestore(app);
+
+    // RECEITA PADRÃO
+    const receitaBrownie = [
+      {
+        ingrediente: "Açúcar",
+        quantidade: 380,
+        unidade: "g"
+      },
+
+      {
+        ingrediente: "Ovo",
+        quantidade: 5,
+        unidade: "un"
+      },
+
+      {
+        ingrediente: "Óleo",
+        quantidade: 220,
+        unidade: "ml"
+      },
+
+      {
+        ingrediente: "Chocolate ao leite",
+        quantidade: 150,
+        unidade: "g"
+      },
+
+      {
+        ingrediente: "Chocolate 50%",
+        quantidade: 65,
+        unidade: "g"
+      },
+
+      {
+        ingrediente: "Farinha",
+        quantidade: 120,
+        unidade: "g"
+      }
+    ];
+
+    // CARREGAR ESTOQUE
+    async function carregarEstoque() {
+
+      const tabela =
+        document.getElementById("tabelaEstoque");
+
+      tabela.innerHTML = "";
+
+      const comprasSnapshot =
+        await getDocs(collection(db, "compras"));
+
+      const estoque = {};
+
+      // SOMA COMPRAS
+      comprasSnapshot.forEach((doc) => {
+
+        const compra = doc.data();
+
+        const nome =
+          compra.ingrediente;
+
+        if (!estoque[nome]) {
+
+          estoque[nome] = {
+            quantidade: 0,
+            unidade: compra.unidade
+          };
+
+        }
+
+        estoque[nome].quantidade +=
+          Number(compra.quantidade);
+
+      });
+
+      // PRODUÇÕES
+      const producoes =
+        JSON.parse(localStorage.getItem("producoes"))
+        || [];
+
+      producoes.forEach((producao) => {
+
+        receitaBrownie.forEach((item) => {
+
+          const totalUsado =
+            item.quantidade *
+            producao.quantidade;
+
+          if (estoque[item.ingrediente]) {
+
+            estoque[item.ingrediente]
+              .quantidade -= totalUsado;
+
+          }
+
+        });
+
+      });
+
+      // MOSTRAR ESTOQUE
+      for (let item in estoque) {
+
+        let status = "Bom";
+        let cor = "text-green-600";
+
+        if (estoque[item].quantidade < 1000) {
+
+          status = "Médio";
+          cor = "text-yellow-600";
+
+        }
+
+        if (estoque[item].quantidade < 300) {
+
+          status = "Baixo";
+          cor = "text-red-600";
+
+        }
+
+        tabela.innerHTML += `
+          <tr class="border-b border-gray-100">
+
+            <td class="py-5">
+              ${item}
+            </td>
+
+            <td class="py-5">
+              ${estoque[item].quantidade}${estoque[item].unidade}
+            </td>
+
+            <td class="py-5 ${cor} font-medium">
+              ${status}
+            </td>
+
+          </tr>
+        `;
+
+      }
+
+    }
+
+    // REGISTRAR PRODUÇÃO
+    function registrarProducao() {
+
+      const quantidade =
+        document.getElementById(
+          "quantidadeProduzida"
+        ).value;
+
+      if (quantidade === "") {
+
+        alert("Digite uma quantidade");
+
+        return;
+
+      }
+
+      const producoes =
+        JSON.parse(localStorage.getItem("producoes"))
+        || [];
+
+      producoes.push({
+
+        produto: "Brownie",
+        quantidade: Number(quantidade)
+
+      });
+
+      localStorage.setItem(
+        "producoes",
+        JSON.stringify(producoes)
+      );
+
+      document.getElementById(
+        "quantidadeProduzida"
+      ).value = "";
+
+      carregarEstoque();
+
+      alert("Produção registrada!");
+
+    }
+
+    // GLOBAL
+    window.registrarProducao =
+      registrarProducao;
+
+    // INICIAR
+    carregarEstoque();
+
+  </script>
+
+</body>
+</html>

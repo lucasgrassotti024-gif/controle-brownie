@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Análises</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+   <!-- SIDEBAR -->
+<aside class="w-64 bg-black text-white p-6">
+
+  <h1 class="text-3xl font-bold mb-10">
+    Controle
+  </h1>
+
+  <div class="flex flex-col gap-3">
+
+    <!-- COMPRAS -->
+    <a
+      href="compras.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      🛒 Compras
+    </a>
+
+    <!-- VENDAS -->
+    <a
+      href="vendas.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💰 Vendas
+    </a>
+
+    <!-- ANÁLISES -->
+    <a
+      href="index.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      📊 Análises
+    </a>
+
+    <!-- RECLAMAÇÕES -->
+    <a
+      href="reclamacoes.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💬 Reclamações
+    </a>
+
+    <a
+          href="estoque.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📦 Estoque
+        </a>
+
+  </div>
+
+</aside>
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-10">
+
+      <!-- TÍTULO -->
+      <div class="mb-8">
+
+        <h2 class="text-4xl font-bold text-gray-800">
+          Análises
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Veja lucro, gastos e desempenho do negócio.
+        </p>
+
+      </div>
+
+      <!-- CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
+
+        <!-- FATURAMENTO -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Total vendido
+          </p>
+
+          <h3
+            id="totalVendido"
+            class="text-3xl font-bold text-green-600"
+          >
+            R$ 0
+          </h3>
+
+        </div>
+
+        <!-- GASTOS -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Total gasto
+          </p>
+
+          <h3
+            id="totalGasto"
+            class="text-3xl font-bold text-red-500"
+          >
+            R$ 0
+          </h3>
+
+        </div>
+
+        <!-- LUCRO -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Lucro do mês
+          </p>
+
+          <h3
+            id="lucroMes"
+            class="text-3xl font-bold text-gray-800"
+          >
+            R$ 0
+          </h3>
+
+        </div>
+
+        <!-- MARGEM -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Margem de lucro
+          </p>
+
+          <h3
+            id="margemLucro"
+            class="text-3xl font-bold text-gray-800"
+          >
+            0%
+          </h3>
+
+        </div>
+
+      </div>
+
+      <!-- ALERTAS -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Alertas automáticos
+        </h3>
+
+        <div
+          id="alertas"
+          class="flex flex-col gap-4"
+        >
+
+          <div class="bg-gray-100 rounded-2xl p-4 text-gray-700">
+            Nenhuma análise ainda.
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- GASTOS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+
+        <!-- MAIS GASTOS -->
+        <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+          <h3 class="text-2xl font-semibold mb-6">
+            Onde você mais gasta
+          </h3>
+
+          <div
+            id="listaGastos"
+            class="flex flex-col gap-4"
+          >
+
+            <div class="bg-gray-100 rounded-2xl p-4 text-gray-700">
+              Nenhum gasto registrado.
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- MAIS VENDIDOS -->
+        <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+          <h3 class="text-2xl font-semibold mb-6">
+            Produtos mais vendidos
+          </h3>
+
+          <div
+            id="listaVendidos"
+            class="flex flex-col gap-4"
+          >
+
+            <div class="bg-gray-100 rounded-2xl p-4 text-gray-700">
+              Nenhuma venda registrada.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module">
+
+  import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+  import {
+    getFirestore,
+    collection,
+    getDocs
+  }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  // FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+    authDomain: "controle-brownie.firebaseapp.com",
+    projectId: "controle-brownie",
+    storageBucket: "controle-brownie.firebasestorage.app",
+    messagingSenderId: "832308524637",
+    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+    measurementId: "G-SG0D3YZX7J"
+  };
+
+  // INICIALIZA FIREBASE
+  const app = initializeApp(firebaseConfig);
+
+  // INICIALIZA FIRESTORE
+  const db = getFirestore(app);
+
+  async function carregarAnalises() {
+
+    // BUSCA DADOS
+    const comprasSnapshot =
+      await getDocs(collection(db, "compras"));
+
+    const vendasSnapshot =
+      await getDocs(collection(db, "vendas"));
+
+    const reclamacoesSnapshot =
+      await getDocs(collection(db, "reclamacoes"));
+
+    let totalVendido = 0;
+    let totalGasto = 0;
+
+    const gastos = {};
+    const vendidos = {};
+
+    let totalReclamacoes = 0;
+
+    // COMPRAS
+    comprasSnapshot.forEach((doc) => {
+
+      const compra = doc.data();
+
+      totalGasto += Number(compra.preco);
+
+      if (!gastos[compra.ingrediente]) {
+        gastos[compra.ingrediente] = 0;
+      }
+
+      gastos[compra.ingrediente] +=
+        Number(compra.preco);
+
+    });
+
+    // VENDAS
+    vendasSnapshot.forEach((doc) => {
+
+      const venda = doc.data();
+
+      totalVendido += Number(venda.valor);
+
+      if (!vendidos[venda.produto]) {
+        vendidos[venda.produto] = 0;
+      }
+
+      vendidos[venda.produto] +=
+        Number(venda.quantidade);
+
+    });
+
+    // RECLAMAÇÕES
+    reclamacoesSnapshot.forEach(() => {
+      totalReclamacoes++;
+    });
+
+    // LUCRO
+    const lucro =
+      totalVendido - totalGasto;
+
+    // MARGEM
+    let margem = 0;
+
+    if (totalVendido > 0) {
+
+      margem =
+        ((lucro / totalVendido) * 100)
+        .toFixed(1);
+
+    }
+
+    // CARDS
+    document.getElementById("totalVendido")
+      .innerText = `R$ ${totalVendido}`;
+
+    document.getElementById("totalGasto")
+      .innerText = `R$ ${totalGasto}`;
+
+    document.getElementById("lucroMes")
+      .innerText = `R$ ${lucro}`;
+
+    document.getElementById("margemLucro")
+      .innerText = `${margem}%`;
+
+    // GASTOS
+    const listaGastos =
+      document.getElementById("listaGastos");
+
+    listaGastos.innerHTML = "";
+
+    for (let item in gastos) {
+
+      listaGastos.innerHTML += `
+        <div class="bg-gray-100 rounded-2xl p-4 flex justify-between">
+
+          <span>${item}</span>
+
+          <span class="font-semibold">
+            R$ ${gastos[item]}
+          </span>
+
+        </div>
+      `;
+
+    }
+
+    // MAIS VENDIDOS
+    const listaVendidos =
+      document.getElementById("listaVendidos");
+
+    listaVendidos.innerHTML = "";
+
+    for (let item in vendidos) {
+
+      listaVendidos.innerHTML += `
+        <div class="bg-gray-100 rounded-2xl p-4 flex justify-between">
+
+          <span>${item}</span>
+
+          <span class="font-semibold">
+            ${vendidos[item]} vendas
+          </span>
+
+        </div>
+      `;
+
+    }
+
+    // ALERTAS
+    const alertas =
+      document.getElementById("alertas");
+
+    alertas.innerHTML = "";
+
+    if (lucro < 0) {
+
+      alertas.innerHTML += `
+        <div class="bg-red-100 text-red-700 rounded-2xl p-4">
+          ⚠ Você está tendo prejuízo
+        </div>
+      `;
+
+    }
+
+    if (margem < 30) {
+
+      alertas.innerHTML += `
+        <div class="bg-yellow-100 text-yellow-700 rounded-2xl p-4">
+          ⚠ Margem de lucro baixa
+        </div>
+      `;
+
+    }
+
+    if (totalReclamacoes >= 5) {
+
+      alertas.innerHTML += `
+        <div class="bg-orange-100 text-orange-700 rounded-2xl p-4">
+          ⚠ Muitas reclamações registradas
+        </div>
+      `;
+
+    }
+
+    if (alertas.innerHTML === "") {
+
+      alertas.innerHTML = `
+        <div class="bg-green-100 text-green-700 rounded-2xl p-4">
+          ✅ Tudo parece estar indo bem
+        </div>
+      `;
+
+    }
+
+  }
+
+  carregarAnalises();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Reclamações</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <!-- SIDEBAR -->
+<aside class="w-64 bg-black text-white p-6">
+
+  <h1 class="text-3xl font-bold mb-10">
+    Controle
+  </h1>
+
+  <div class="flex flex-col gap-3">
+
+    <!-- COMPRAS -->
+    <a
+      href="compras.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      🛒 Compras
+    </a>
+
+    <!-- VENDAS -->
+    <a
+      href="vendas.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💰 Vendas
+    </a>
+
+    <!-- ANÁLISES -->
+    <a
+      href="index.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      📊 Análises
+    </a>
+
+    <!-- RECLAMAÇÕES -->
+    <a
+      href="reclamacoes.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💬 Reclamações
+    </a>
+
+    <a
+          href="estoque.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📦 Estoque
+        </a>
+
+  </div>
+
+</aside>
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-10">
+
+      <!-- TÍTULO -->
+      <div class="mb-8">
+
+        <h2 class="text-4xl font-bold text-gray-800">
+          Reclamações
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Registre problemas e acompanhe padrões dos clientes.
+        </p>
+
+      </div>
+
+      <!-- FORMULÁRIO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Nova reclamação
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Cliente -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Nome do cliente
+            </label>
+
+            <input
+              type="text"
+              id="cliente"
+              placeholder="Ex: João"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Produto -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Produto
+            </label>
+
+            <input
+              type="text"
+              id="produto"
+              placeholder="Ex: Brownie"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Tipo -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Tipo do problema
+            </label>
+
+            <select
+              id="tipo"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            >
+              <option>Atraso</option>
+              <option>Muito doce</option>
+              <option>Muito salgado</option>
+              <option>Produto danificado</option>
+              <option>Atendimento</option>
+              <option>Outro</option>
+            </select>
+
+          </div>
+
+          <!-- Data -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Data
+            </label>
+
+            <input
+              type="date"
+              id="data"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+        </div>
+
+        <!-- OBSERVAÇÃO -->
+        <div class="mt-5">
+
+          <label class="block text-sm text-gray-600 mb-2">
+            Observação
+          </label>
+
+          <textarea
+            id="observacao"
+            rows="5"
+            placeholder="Descreva a reclamação..."
+            class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black resize-none"
+          ></textarea>
+
+        </div>
+
+        <!-- BOTÃO -->
+        <button
+          onclick="salvarReclamacao()"
+          class="mt-6 bg-black text-white px-6 py-4 rounded-2xl hover:opacity-90 transition"
+        >
+          Salvar reclamação
+        </button>
+
+      </div>
+
+      <!-- CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Total de reclamações
+          </p>
+
+          <h3
+            id="totalReclamacoes"
+            class="text-3xl font-bold text-gray-800"
+          >
+            0
+          </h3>
+
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Problema mais comum
+          </p>
+
+          <h3
+            id="problemaMaisComum"
+            class="text-2xl font-bold text-gray-800"
+          >
+            -
+          </h3>
+
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Produto mais reclamado
+          </p>
+
+          <h3
+            id="produtoMaisReclamado"
+            class="text-2xl font-bold text-gray-800"
+          >
+            -
+          </h3>
+
+        </div>
+
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Histórico de reclamações
+        </h3>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full">
+
+            <thead>
+
+              <tr class="border-b border-gray-200 text-gray-500 text-left">
+
+                <th class="pb-4">Cliente</th>
+                <th class="pb-4">Produto</th>
+                <th class="pb-4">Problema</th>
+                <th class="pb-4">Observação</th>
+                <th class="pb-4">Data</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="tabelaReclamacoes">
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module">
+
+  import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs
+  }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  // FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+    authDomain: "controle-brownie.firebaseapp.com",
+    projectId: "controle-brownie",
+    storageBucket: "controle-brownie.firebasestorage.app",
+    messagingSenderId: "832308524637",
+    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+    measurementId: "G-SG0D3YZX7J"
+  };
+
+  // INICIALIZA FIREBASE
+  const app = initializeApp(firebaseConfig);
+
+  // INICIALIZA FIRESTORE
+  const db = getFirestore(app);
+
+  // SALVAR RECLAMAÇÃO
+  async function salvarReclamacao() {
+
+    const cliente =
+      document.getElementById("cliente").value;
+
+    const produto =
+      document.getElementById("produto").value;
+
+    const tipo =
+      document.getElementById("tipo").value;
+
+    const observacao =
+      document.getElementById("observacao").value;
+
+    const data =
+      document.getElementById("data").value;
+
+    if (
+      cliente === "" ||
+      produto === "" ||
+      observacao === "" ||
+      data === ""
+    ) {
+      alert("Preencha todos os campos");
+      return;
+    }
+
+    try {
+
+      await addDoc(collection(db, "reclamacoes"), {
+
+        cliente: cliente,
+        produto: produto,
+        tipo: tipo,
+        observacao: observacao,
+        data: data
+
+      });
+
+      carregarReclamacoes();
+
+      document.getElementById("cliente").value = "";
+      document.getElementById("produto").value = "";
+      document.getElementById("observacao").value = "";
+      document.getElementById("data").value = "";
+
+      alert("Reclamação salva!");
+
+    } catch (erro) {
+
+      console.error(erro);
+
+      alert("Erro ao salvar reclamação");
+
+    }
+
+  }
+
+  // CARREGAR RECLAMAÇÕES
+  async function carregarReclamacoes() {
+
+    const tabela =
+      document.getElementById("tabelaReclamacoes");
+
+    tabela.innerHTML = "";
+
+    const querySnapshot =
+      await getDocs(collection(db, "reclamacoes"));
+
+    let totalReclamacoes = 0;
+
+    let tiposProblema = {};
+
+    let produtosReclamados = {};
+
+    querySnapshot.forEach((doc) => {
+
+      const reclamacao = doc.data();
+
+      tabela.innerHTML += `
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+
+          <td class="py-5 font-medium text-gray-800">
+            ${reclamacao.cliente}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${reclamacao.produto}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${reclamacao.tipo}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${reclamacao.observacao}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${reclamacao.data}
+          </td>
+
+        </tr>
+      `;
+
+      totalReclamacoes++;
+
+      if (!tiposProblema[reclamacao.tipo]) {
+        tiposProblema[reclamacao.tipo] = 0;
+      }
+
+      tiposProblema[reclamacao.tipo]++;
+
+      if (!produtosReclamados[reclamacao.produto]) {
+        produtosReclamados[reclamacao.produto] = 0;
+      }
+
+      produtosReclamados[reclamacao.produto]++;
+
+    });
+
+    // TOTAL
+    document.getElementById("totalReclamacoes").innerText =
+      totalReclamacoes;
+
+    // PROBLEMA MAIS COMUM
+    let problemaMaisComum = "-";
+    let maiorProblema = 0;
+
+    for (let item in tiposProblema) {
+
+      if (tiposProblema[item] > maiorProblema) {
+
+        maiorProblema = tiposProblema[item];
+
+        problemaMaisComum = item;
+
+      }
+
+    }
+
+    // PRODUTO MAIS RECLAMADO
+    let produtoMaisReclamado = "-";
+    let maiorProduto = 0;
+
+    for (let item in produtosReclamados) {
+
+      if (produtosReclamados[item] > maiorProduto) {
+
+        maiorProduto = produtosReclamados[item];
+
+        produtoMaisReclamado = item;
+
+      }
+
+    }
+
+    document.getElementById("problemaMaisComum").innerText =
+      problemaMaisComum;
+
+    document.getElementById("produtoMaisReclamado").innerText =
+      produtoMaisReclamado;
+
+  }
+
+  // GLOBAL
+  window.salvarReclamacao = salvarReclamacao;
+
+  // CARREGA AUTOMATICAMENTE
+  carregarReclamacoes();
+
+</script>
+</body>
+</html>

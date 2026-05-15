@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Controle de Compras</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <!-- SIDEBAR -->
+<aside class="w-64 bg-black text-white p-6">
+
+  <h1 class="text-3xl font-bold mb-10">
+    Controle
+  </h1>
+
+  <div class="flex flex-col gap-3">
+
+    <!-- COMPRAS -->
+    <a
+      href="compras.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      🛒 Compras
+    </a>
+
+    <!-- VENDAS -->
+    <a
+      href="vendas.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💰 Vendas
+    </a>
+
+    <!-- ANÁLISES -->
+    <a
+      href="index.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      📊 Análises
+    </a>
+
+    <!-- RECLAMAÇÕES -->
+    <a
+      href="reclamacoes.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💬 Reclamações
+    </a>
+
+    <a
+          href="estoque.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📦 Estoque
+        </a>
+
+  </div>
+
+</aside>
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-10">
+
+      <!-- TÍTULO -->
+      <div class="mb-8">
+
+        <h2 class="text-4xl font-bold text-gray-800">
+          Compras
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Registre ingredientes e acompanhe seus gastos.
+        </p>
+
+      </div>
+
+      <!-- FORMULÁRIO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Nova compra
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Ingrediente -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Ingrediente
+            </label>
+
+            <input
+              type="text"
+              id="ingrediente"
+              placeholder="Ex: Chocolate"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Quantidade -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Quantidade
+            </label>
+
+            <input
+              type="number"
+              id="quantidade"
+              placeholder="5000"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Unidade -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Unidade
+            </label>
+
+            <select
+              id="unidade"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            >
+              <option value="g">gramas (g)</option>
+              <option value="ml">mililitros (ml)</option>
+              <option value="kg">quilogramas (kg)</option>
+              <option value="L">litros (L)</option>
+              <option value="un">unidade(s)</option>
+            </select>
+
+          </div>
+
+          <!-- Preço -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Preço
+            </label>
+
+            <input
+              type="number"
+              id="preco"
+              placeholder="0,00"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Data -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Data
+            </label>
+
+            <input
+              type="date"
+              id="data"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+        </div>
+
+        <!-- BOTÃO -->
+        <button
+          onclick="salvarCompra()"
+          class="mt-6 bg-black text-white px-6 py-4 rounded-2xl hover:opacity-90 transition"
+        >
+          Salvar compra
+        </button>
+
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+        <div class="flex items-center justify-between mb-6">
+
+          <h3 class="text-2xl font-semibold">
+            Histórico de compras
+          </h3>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full">
+
+            <thead>
+
+              <tr class="border-b border-gray-200 text-gray-500 text-left">
+
+                <th class="pb-4">Ingrediente</th>
+                <th class="pb-4">Quantidade</th>
+                <th class="pb-4">Preço</th>
+                <th class="pb-4">Data</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="tabelaCompras">
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module">
+
+  import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs
+  }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  // FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+    authDomain: "controle-brownie.firebaseapp.com",
+    projectId: "controle-brownie",
+    storageBucket: "controle-brownie.firebasestorage.app",
+    messagingSenderId: "832308524637",
+    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+    measurementId: "G-SG0D3YZX7J"
+  };
+
+  // INICIALIZA FIREBASE
+  const app = initializeApp(firebaseConfig);
+
+  // INICIALIZA FIRESTORE
+  const db = getFirestore(app);
+
+  // SALVAR COMPRA
+  async function salvarCompra() {
+
+    const ingrediente =
+      document.getElementById("ingrediente").value;
+
+    const quantidade =
+      document.getElementById("quantidade").value;
+
+    const unidade =
+      document.getElementById("unidade").value;
+
+    const preco =
+      document.getElementById("preco").value;
+
+    const data =
+      document.getElementById("data").value;
+
+    if (
+      ingrediente === "" ||
+      quantidade === "" ||
+      preco === "" ||
+      data === ""
+    ) {
+      alert("Preencha todos os campos");
+      return;
+    }
+
+    try {
+
+      // SALVA NO FIREBASE
+      await addDoc(collection(db, "compras"), {
+
+        ingrediente: ingrediente,
+        quantidade: quantidade,
+        unidade: unidade,
+        preco: Number(preco),
+        data: data
+
+      });
+
+      // RECARREGA TABELA
+      carregarCompras();
+
+      // LIMPA INPUTS
+      document.getElementById("ingrediente").value = "";
+      document.getElementById("quantidade").value = "";
+      document.getElementById("preco").value = "";
+      document.getElementById("data").value = "";
+
+      alert("Compra salva!");
+
+    } catch (erro) {
+
+      console.error(erro);
+
+      alert("Erro ao salvar");
+
+    }
+
+  }
+
+  // CARREGAR COMPRAS
+  async function carregarCompras() {
+
+    const tabela =
+      document.getElementById("tabelaCompras");
+
+    tabela.innerHTML = "";
+
+    const querySnapshot =
+      await getDocs(collection(db, "compras"));
+
+    querySnapshot.forEach((doc) => {
+
+      const compra = doc.data();
+
+      tabela.innerHTML += `
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+
+          <td class="py-5 font-medium text-gray-800">
+            ${compra.ingrediente}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${compra.quantidade}${compra.unidade}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            R$ ${compra.preco}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${compra.data}
+          </td>
+
+        </tr>
+      `;
+
+    });
+
+  }
+
+  // DEIXA FUNÇÃO GLOBAL
+  window.salvarCompra = salvarCompra;
+
+  // CARREGA AUTOMATICAMENTE
+  carregarCompras();
+
+</script>
+
+</body>
+</html>
