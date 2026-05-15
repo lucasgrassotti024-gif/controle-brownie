@@ -14,57 +14,57 @@
   <div class="flex min-h-screen">
 
     <!-- SIDEBAR -->
-   <!-- SIDEBAR -->
-<aside class="w-64 bg-black text-white p-6">
+    <aside class="w-64 bg-black text-white p-6">
 
-  <h1 class="text-3xl font-bold mb-10">
-    Controle
-  </h1>
+      <h1 class="text-3xl font-bold mb-10">
+        Controle
+      </h1>
 
-  <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3">
 
-    <!-- COMPRAS -->
-    <a
-      href="compras.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      🛒 Compras
-    </a>
+        <!-- COMPRAS -->
+        <a
+          href="compras.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          🛒 Compras
+        </a>
 
-    <!-- VENDAS -->
-    <a
-      href="vendas.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      💰 Vendas
-    </a>
-
-    <!-- ANÁLISES -->
-    <a
-      href="index.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      📊 Análises
-    </a>
-
-    <!-- RECLAMAÇÕES -->
-    <a
-      href="reclamacoes.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      💬 Reclamações
-    </a>
-
-    <a
-          href="estoque.html"
+        <!-- VENDAS -->
+        <a
+          href="vendas.html"
           class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          💰 Vendas
+        </a>
+
+        <!-- ESTOQUE -->
+        <a
+          href="estoque.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           📦 Estoque
         </a>
 
-  </div>
+        <!-- ANÁLISES -->
+        <a
+          href="index.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          📊 Análises
+        </a>
 
-</aside>
+        <!-- RECLAMAÇÕES -->
+        <a
+          href="reclamacoes.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💬 Reclamações
+        </a>
+
+      </div>
+
+    </aside>
 
     <!-- CONTEÚDO -->
     <main class="flex-1 p-10">
@@ -275,185 +275,188 @@
 
   <script type="module">
 
-  import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    getDocs
-  }
-  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-  // FIREBASE CONFIG
-  const firebaseConfig = {
-    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
-    authDomain: "controle-brownie.firebaseapp.com",
-    projectId: "controle-brownie",
-    storageBucket: "controle-brownie.firebasestorage.app",
-    messagingSenderId: "832308524637",
-    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
-    measurementId: "G-SG0D3YZX7J"
-  };
+    // FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+      authDomain: "controle-brownie.firebaseapp.com",
+      projectId: "controle-brownie",
+      storageBucket: "controle-brownie.firebasestorage.app",
+      messagingSenderId: "832308524637",
+      appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+      measurementId: "G-SG0D3YZX7J"
+    };
 
-  // INICIALIZA FIREBASE
-  const app = initializeApp(firebaseConfig);
+    // INICIALIZA FIREBASE
+    const app = initializeApp(firebaseConfig);
 
-  // INICIALIZA FIRESTORE
-  const db = getFirestore(app);
+    // INICIALIZA FIRESTORE
+    const db = getFirestore(app);
 
-  // SALVAR VENDA
-  async function salvarVenda() {
+    // SALVAR VENDA
+    async function salvarVenda() {
 
-    const produto =
-      document.getElementById("produto").value;
+      const produto =
+        document.getElementById("produto").value;
 
-    const quantidade =
-      document.getElementById("quantidade").value;
+      const quantidade =
+        document.getElementById("quantidade").value;
 
-    const valor =
-      document.getElementById("valor").value;
+      const valor =
+        document.getElementById("valor").value;
 
-    const pagamento =
-      document.getElementById("pagamento").value;
+      const pagamento =
+        document.getElementById("pagamento").value;
 
-    const data =
-      document.getElementById("data").value;
+      const data =
+        document.getElementById("data").value;
 
-    if (
-      produto === "" ||
-      quantidade === "" ||
-      valor === "" ||
-      data === ""
-    ) {
-      alert("Preencha todos os campos");
-      return;
+      if (
+        produto === "" ||
+        quantidade === "" ||
+        valor === "" ||
+        data === ""
+      ) {
+
+        alert("Preencha todos os campos");
+
+        return;
+
+      }
+
+      try {
+
+        await addDoc(collection(db, "vendas"), {
+
+          produto: produto,
+          quantidade: Number(quantidade),
+          valor: Number(valor),
+          pagamento: pagamento,
+          data: data
+
+        });
+
+        carregarVendas();
+
+        document.getElementById("produto").value = "";
+        document.getElementById("quantidade").value = "";
+        document.getElementById("valor").value = "";
+        document.getElementById("data").value = "";
+
+        alert("Venda salva!");
+
+      } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao salvar venda");
+
+      }
+
     }
 
-    try {
+    // CARREGAR VENDAS
+    async function carregarVendas() {
 
-      await addDoc(collection(db, "vendas"), {
+      const tabela =
+        document.getElementById("tabelaVendas");
 
-        produto: produto,
-        quantidade: Number(quantidade),
-        valor: Number(valor),
-        pagamento: pagamento,
-        data: data
+      tabela.innerHTML = "";
+
+      const querySnapshot =
+        await getDocs(collection(db, "vendas"));
+
+      let totalVendido = 0;
+      let quantidadeVendas = 0;
+
+      let pagamentos = {
+        Pix: 0,
+        Dinheiro: 0,
+        Cartão: 0
+      };
+
+      querySnapshot.forEach((doc) => {
+
+        const venda = doc.data();
+
+        tabela.innerHTML += `
+          <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+
+            <td class="py-5 font-medium text-gray-800">
+              ${venda.produto}
+            </td>
+
+            <td class="py-5 text-gray-600">
+              ${venda.quantidade}
+            </td>
+
+            <td class="py-5 text-gray-600">
+              R$ ${venda.valor}
+            </td>
+
+            <td class="py-5 text-gray-600">
+              ${venda.pagamento}
+            </td>
+
+            <td class="py-5 text-gray-600">
+              ${venda.data}
+            </td>
+
+          </tr>
+        `;
+
+        totalVendido += venda.valor;
+
+        quantidadeVendas++;
+
+        pagamentos[venda.pagamento]++;
 
       });
 
-      carregarVendas();
+      let maiorPagamento = "Pix";
 
-      document.getElementById("produto").value = "";
-      document.getElementById("quantidade").value = "";
-      document.getElementById("valor").value = "";
-      document.getElementById("data").value = "";
+      if (
+        pagamentos["Dinheiro"] >
+        pagamentos[maiorPagamento]
+      ) {
+        maiorPagamento = "Dinheiro";
+      }
 
-      alert("Venda salva!");
+      if (
+        pagamentos["Cartão"] >
+        pagamentos[maiorPagamento]
+      ) {
+        maiorPagamento = "Cartão";
+      }
 
-    } catch (erro) {
+      document.getElementById("totalVendido").innerText =
+        `R$ ${totalVendido}`;
 
-      console.error(erro);
+      document.getElementById("quantidadeVendas").innerText =
+        quantidadeVendas;
 
-      alert("Erro ao salvar venda");
+      document.getElementById("pagamentoMaisUsado").innerText =
+        maiorPagamento;
 
     }
 
-  }
+    // GLOBAL
+    window.salvarVenda = salvarVenda;
 
-  // CARREGAR VENDAS
-  async function carregarVendas() {
+    // CARREGA AUTOMATICAMENTE
+    carregarVendas();
 
-    const tabela =
-      document.getElementById("tabelaVendas");
-
-    tabela.innerHTML = "";
-
-    const querySnapshot =
-      await getDocs(collection(db, "vendas"));
-
-    let totalVendido = 0;
-    let quantidadeVendas = 0;
-
-    let pagamentos = {
-      Pix: 0,
-      Dinheiro: 0,
-      Cartão: 0
-    };
-
-    querySnapshot.forEach((doc) => {
-
-      const venda = doc.data();
-
-      tabela.innerHTML += `
-        <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
-
-          <td class="py-5 font-medium text-gray-800">
-            ${venda.produto}
-          </td>
-
-          <td class="py-5 text-gray-600">
-            ${venda.quantidade}
-          </td>
-
-          <td class="py-5 text-gray-600">
-            R$ ${venda.valor}
-          </td>
-
-          <td class="py-5 text-gray-600">
-            ${venda.pagamento}
-          </td>
-
-          <td class="py-5 text-gray-600">
-            ${venda.data}
-          </td>
-
-        </tr>
-      `;
-
-      totalVendido += venda.valor;
-
-      quantidadeVendas++;
-
-      pagamentos[venda.pagamento]++;
-
-    });
-
-    let maiorPagamento = "Pix";
-
-    if (
-      pagamentos["Dinheiro"] >
-      pagamentos[maiorPagamento]
-    ) {
-      maiorPagamento = "Dinheiro";
-    }
-
-    if (
-      pagamentos["Cartão"] >
-      pagamentos[maiorPagamento]
-    ) {
-      maiorPagamento = "Cartão";
-    }
-
-    document.getElementById("totalVendido").innerText =
-      `R$ ${totalVendido}`;
-
-    document.getElementById("quantidadeVendas").innerText =
-      quantidadeVendas;
-
-    document.getElementById("pagamentoMaisUsado").innerText =
-      maiorPagamento;
-
-  }
-
-  // GLOBAL
-  window.salvarVenda = salvarVenda;
-
-  // CARREGA AUTOMATICAMENTE
-  carregarVendas();
-
-</script>
+  </script>
 
 </body>
 </html>

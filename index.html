@@ -14,57 +14,57 @@
   <div class="flex min-h-screen">
 
     <!-- SIDEBAR -->
-   <!-- SIDEBAR -->
-<aside class="w-64 bg-black text-white p-6">
+    <aside class="w-64 bg-black text-white p-6">
 
-  <h1 class="text-3xl font-bold mb-10">
-    Controle
-  </h1>
+      <h1 class="text-3xl font-bold mb-10">
+        Controle
+      </h1>
 
-  <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3">
 
-    <!-- COMPRAS -->
-    <a
-      href="compras.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      🛒 Compras
-    </a>
+        <!-- COMPRAS -->
+        <a
+          href="compras.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          🛒 Compras
+        </a>
 
-    <!-- VENDAS -->
-    <a
-      href="vendas.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      💰 Vendas
-    </a>
+        <!-- VENDAS -->
+        <a
+          href="vendas.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💰 Vendas
+        </a>
 
-    <!-- ANÁLISES -->
-    <a
-      href="index.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      📊 Análises
-    </a>
-
-    <!-- RECLAMAÇÕES -->
-    <a
-      href="reclamacoes.html"
-      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
-    >
-      💬 Reclamações
-    </a>
-
-    <a
+        <!-- ESTOQUE -->
+        <a
           href="estoque.html"
-          class="bg-white text-black rounded-2xl p-4 block font-medium"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           📦 Estoque
         </a>
 
-  </div>
+        <!-- ANÁLISES -->
+        <a
+          href="index.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📊 Análises
+        </a>
 
-</aside>
+        <!-- RECLAMAÇÕES -->
+        <a
+          href="reclamacoes.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💬 Reclamações
+        </a>
+
+      </div>
+
+    </aside>
 
     <!-- CONTEÚDO -->
     <main class="flex-1 p-10">
@@ -222,213 +222,213 @@
 
   <script type="module">
 
-  import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-  import {
-    getFirestore,
-    collection,
-    getDocs
-  }
-  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-  // FIREBASE CONFIG
-  const firebaseConfig = {
-    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
-    authDomain: "controle-brownie.firebaseapp.com",
-    projectId: "controle-brownie",
-    storageBucket: "controle-brownie.firebasestorage.app",
-    messagingSenderId: "832308524637",
-    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
-    measurementId: "G-SG0D3YZX7J"
-  };
+    // FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+      authDomain: "controle-brownie.firebaseapp.com",
+      projectId: "controle-brownie",
+      storageBucket: "controle-brownie.firebasestorage.app",
+      messagingSenderId: "832308524637",
+      appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+      measurementId: "G-SG0D3YZX7J"
+    };
 
-  // INICIALIZA FIREBASE
-  const app = initializeApp(firebaseConfig);
+    // INICIALIZA FIREBASE
+    const app = initializeApp(firebaseConfig);
 
-  // INICIALIZA FIRESTORE
-  const db = getFirestore(app);
+    // INICIALIZA FIRESTORE
+    const db = getFirestore(app);
 
-  async function carregarAnalises() {
+    async function carregarAnalises() {
 
-    // BUSCA DADOS
-    const comprasSnapshot =
-      await getDocs(collection(db, "compras"));
+      // BUSCA DADOS
+      const comprasSnapshot =
+        await getDocs(collection(db, "compras"));
 
-    const vendasSnapshot =
-      await getDocs(collection(db, "vendas"));
+      const vendasSnapshot =
+        await getDocs(collection(db, "vendas"));
 
-    const reclamacoesSnapshot =
-      await getDocs(collection(db, "reclamacoes"));
+      const reclamacoesSnapshot =
+        await getDocs(collection(db, "reclamacoes"));
 
-    let totalVendido = 0;
-    let totalGasto = 0;
+      let totalVendido = 0;
+      let totalGasto = 0;
 
-    const gastos = {};
-    const vendidos = {};
+      const gastos = {};
+      const vendidos = {};
 
-    let totalReclamacoes = 0;
+      let totalReclamacoes = 0;
 
-    // COMPRAS
-    comprasSnapshot.forEach((doc) => {
+      // COMPRAS
+      comprasSnapshot.forEach((doc) => {
 
-      const compra = doc.data();
+        const compra = doc.data();
 
-      totalGasto += Number(compra.preco);
+        totalGasto += Number(compra.preco);
 
-      if (!gastos[compra.ingrediente]) {
-        gastos[compra.ingrediente] = 0;
+        if (!gastos[compra.ingrediente]) {
+          gastos[compra.ingrediente] = 0;
+        }
+
+        gastos[compra.ingrediente] +=
+          Number(compra.preco);
+
+      });
+
+      // VENDAS
+      vendasSnapshot.forEach((doc) => {
+
+        const venda = doc.data();
+
+        totalVendido += Number(venda.valor);
+
+        if (!vendidos[venda.produto]) {
+          vendidos[venda.produto] = 0;
+        }
+
+        vendidos[venda.produto] +=
+          Number(venda.quantidade);
+
+      });
+
+      // RECLAMAÇÕES
+      reclamacoesSnapshot.forEach(() => {
+        totalReclamacoes++;
+      });
+
+      // LUCRO
+      const lucro =
+        totalVendido - totalGasto;
+
+      // MARGEM
+      let margem = 0;
+
+      if (totalVendido > 0) {
+
+        margem =
+          ((lucro / totalVendido) * 100)
+          .toFixed(1);
+
       }
 
-      gastos[compra.ingrediente] +=
-        Number(compra.preco);
+      // CARDS
+      document.getElementById("totalVendido")
+        .innerText = `R$ ${totalVendido}`;
 
-    });
+      document.getElementById("totalGasto")
+        .innerText = `R$ ${totalGasto}`;
 
-    // VENDAS
-    vendasSnapshot.forEach((doc) => {
+      document.getElementById("lucroMes")
+        .innerText = `R$ ${lucro}`;
 
-      const venda = doc.data();
+      document.getElementById("margemLucro")
+        .innerText = `${margem}%`;
 
-      totalVendido += Number(venda.valor);
+      // GASTOS
+      const listaGastos =
+        document.getElementById("listaGastos");
 
-      if (!vendidos[venda.produto]) {
-        vendidos[venda.produto] = 0;
+      listaGastos.innerHTML = "";
+
+      for (let item in gastos) {
+
+        listaGastos.innerHTML += `
+          <div class="bg-gray-100 rounded-2xl p-4 flex justify-between">
+
+            <span>${item}</span>
+
+            <span class="font-semibold">
+              R$ ${gastos[item]}
+            </span>
+
+          </div>
+        `;
+
       }
 
-      vendidos[venda.produto] +=
-        Number(venda.quantidade);
+      // MAIS VENDIDOS
+      const listaVendidos =
+        document.getElementById("listaVendidos");
 
-    });
+      listaVendidos.innerHTML = "";
 
-    // RECLAMAÇÕES
-    reclamacoesSnapshot.forEach(() => {
-      totalReclamacoes++;
-    });
+      for (let item in vendidos) {
 
-    // LUCRO
-    const lucro =
-      totalVendido - totalGasto;
+        listaVendidos.innerHTML += `
+          <div class="bg-gray-100 rounded-2xl p-4 flex justify-between">
 
-    // MARGEM
-    let margem = 0;
+            <span>${item}</span>
 
-    if (totalVendido > 0) {
+            <span class="font-semibold">
+              ${vendidos[item]} vendas
+            </span>
 
-      margem =
-        ((lucro / totalVendido) * 100)
-        .toFixed(1);
+          </div>
+        `;
 
-    }
+      }
 
-    // CARDS
-    document.getElementById("totalVendido")
-      .innerText = `R$ ${totalVendido}`;
+      // ALERTAS
+      const alertas =
+        document.getElementById("alertas");
 
-    document.getElementById("totalGasto")
-      .innerText = `R$ ${totalGasto}`;
+      alertas.innerHTML = "";
 
-    document.getElementById("lucroMes")
-      .innerText = `R$ ${lucro}`;
+      if (lucro < 0) {
 
-    document.getElementById("margemLucro")
-      .innerText = `${margem}%`;
+        alertas.innerHTML += `
+          <div class="bg-red-100 text-red-700 rounded-2xl p-4">
+            ⚠ Você está tendo prejuízo
+          </div>
+        `;
 
-    // GASTOS
-    const listaGastos =
-      document.getElementById("listaGastos");
+      }
 
-    listaGastos.innerHTML = "";
+      if (margem < 30) {
 
-    for (let item in gastos) {
+        alertas.innerHTML += `
+          <div class="bg-yellow-100 text-yellow-700 rounded-2xl p-4">
+            ⚠ Margem de lucro baixa
+          </div>
+        `;
 
-      listaGastos.innerHTML += `
-        <div class="bg-gray-100 rounded-2xl p-4 flex justify-between">
+      }
 
-          <span>${item}</span>
+      if (totalReclamacoes >= 5) {
 
-          <span class="font-semibold">
-            R$ ${gastos[item]}
-          </span>
+        alertas.innerHTML += `
+          <div class="bg-orange-100 text-orange-700 rounded-2xl p-4">
+            ⚠ Muitas reclamações registradas
+          </div>
+        `;
 
-        </div>
-      `;
+      }
 
-    }
+      if (alertas.innerHTML === "") {
 
-    // MAIS VENDIDOS
-    const listaVendidos =
-      document.getElementById("listaVendidos");
+        alertas.innerHTML = `
+          <div class="bg-green-100 text-green-700 rounded-2xl p-4">
+            ✅ Tudo parece estar indo bem
+          </div>
+        `;
 
-    listaVendidos.innerHTML = "";
-
-    for (let item in vendidos) {
-
-      listaVendidos.innerHTML += `
-        <div class="bg-gray-100 rounded-2xl p-4 flex justify-between">
-
-          <span>${item}</span>
-
-          <span class="font-semibold">
-            ${vendidos[item]} vendas
-          </span>
-
-        </div>
-      `;
+      }
 
     }
 
-    // ALERTAS
-    const alertas =
-      document.getElementById("alertas");
+    carregarAnalises();
 
-    alertas.innerHTML = "";
-
-    if (lucro < 0) {
-
-      alertas.innerHTML += `
-        <div class="bg-red-100 text-red-700 rounded-2xl p-4">
-          ⚠ Você está tendo prejuízo
-        </div>
-      `;
-
-    }
-
-    if (margem < 30) {
-
-      alertas.innerHTML += `
-        <div class="bg-yellow-100 text-yellow-700 rounded-2xl p-4">
-          ⚠ Margem de lucro baixa
-        </div>
-      `;
-
-    }
-
-    if (totalReclamacoes >= 5) {
-
-      alertas.innerHTML += `
-        <div class="bg-orange-100 text-orange-700 rounded-2xl p-4">
-          ⚠ Muitas reclamações registradas
-        </div>
-      `;
-
-    }
-
-    if (alertas.innerHTML === "") {
-
-      alertas.innerHTML = `
-        <div class="bg-green-100 text-green-700 rounded-2xl p-4">
-          ✅ Tudo parece estar indo bem
-        </div>
-      `;
-
-    }
-
-  }
-
-  carregarAnalises();
-
-</script>
+  </script>
 
 </body>
 </html>
