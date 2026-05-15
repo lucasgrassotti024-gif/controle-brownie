@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Controle de Vendas</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+   <!-- SIDEBAR -->
+<aside class="w-64 bg-black text-white p-6">
+
+  <h1 class="text-3xl font-bold mb-10">
+    Controle
+  </h1>
+
+  <div class="flex flex-col gap-3">
+
+    <!-- COMPRAS -->
+    <a
+      href="compras.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      🛒 Compras
+    </a>
+
+    <!-- VENDAS -->
+    <a
+      href="vendas.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💰 Vendas
+    </a>
+
+    <!-- ANÁLISES -->
+    <a
+      href="index.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      📊 Análises
+    </a>
+
+    <!-- RECLAMAÇÕES -->
+    <a
+      href="reclamacoes.html"
+      class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 text-left block"
+    >
+      💬 Reclamações
+    </a>
+
+    <a
+          href="estoque.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📦 Estoque
+        </a>
+
+  </div>
+
+</aside>
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-10">
+
+      <!-- TÍTULO -->
+      <div class="mb-8">
+
+        <h2 class="text-4xl font-bold text-gray-800">
+          Vendas
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Registre vendas e acompanhe seu faturamento.
+        </p>
+
+      </div>
+
+      <!-- FORMULÁRIO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Nova venda
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Produto -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Produto vendido
+            </label>
+
+            <input
+              type="text"
+              id="produto"
+              placeholder="Ex: Brownie"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Quantidade -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Quantidade vendida
+            </label>
+
+            <input
+              type="number"
+              id="quantidade"
+              placeholder="4"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Valor -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Valor recebido
+            </label>
+
+            <input
+              type="number"
+              id="valor"
+              placeholder="48"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+          <!-- Forma de pagamento -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Forma de pagamento
+            </label>
+
+            <select
+              id="pagamento"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            >
+              <option>Pix</option>
+              <option>Dinheiro</option>
+              <option>Cartão</option>
+            </select>
+
+          </div>
+
+          <!-- Data -->
+          <div>
+
+            <label class="block text-sm text-gray-600 mb-2">
+              Data
+            </label>
+
+            <input
+              type="date"
+              id="data"
+              class="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-black"
+            />
+
+          </div>
+
+        </div>
+
+        <!-- BOTÃO -->
+        <button
+          onclick="salvarVenda()"
+          class="mt-6 bg-black text-white px-6 py-4 rounded-2xl hover:opacity-90 transition"
+        >
+          Registrar venda
+        </button>
+
+      </div>
+
+      <!-- RESUMO -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Total vendido
+          </p>
+
+          <h3
+            id="totalVendido"
+            class="text-3xl font-bold text-gray-800"
+          >
+            R$ 0
+          </h3>
+
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Quantidade de vendas
+          </p>
+
+          <h3
+            id="quantidadeVendas"
+            class="text-3xl font-bold text-gray-800"
+          >
+            0
+          </h3>
+
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-sm">
+
+          <p class="text-gray-500 mb-2">
+            Forma de pagamento mais usada
+          </p>
+
+          <h3
+            id="pagamentoMaisUsado"
+            class="text-3xl font-bold text-gray-800"
+          >
+            -
+          </h3>
+
+        </div>
+
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+        <h3 class="text-2xl font-semibold mb-6">
+          Histórico de vendas
+        </h3>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full">
+
+            <thead>
+
+              <tr class="border-b border-gray-200 text-gray-500 text-left">
+
+                <th class="pb-4">Produto</th>
+                <th class="pb-4">Quantidade</th>
+                <th class="pb-4">Valor</th>
+                <th class="pb-4">Pagamento</th>
+                <th class="pb-4">Data</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="tabelaVendas">
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module">
+
+  import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs
+  }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  // FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+    authDomain: "controle-brownie.firebaseapp.com",
+    projectId: "controle-brownie",
+    storageBucket: "controle-brownie.firebasestorage.app",
+    messagingSenderId: "832308524637",
+    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+    measurementId: "G-SG0D3YZX7J"
+  };
+
+  // INICIALIZA FIREBASE
+  const app = initializeApp(firebaseConfig);
+
+  // INICIALIZA FIRESTORE
+  const db = getFirestore(app);
+
+  // SALVAR VENDA
+  async function salvarVenda() {
+
+    const produto =
+      document.getElementById("produto").value;
+
+    const quantidade =
+      document.getElementById("quantidade").value;
+
+    const valor =
+      document.getElementById("valor").value;
+
+    const pagamento =
+      document.getElementById("pagamento").value;
+
+    const data =
+      document.getElementById("data").value;
+
+    if (
+      produto === "" ||
+      quantidade === "" ||
+      valor === "" ||
+      data === ""
+    ) {
+      alert("Preencha todos os campos");
+      return;
+    }
+
+    try {
+
+      await addDoc(collection(db, "vendas"), {
+
+        produto: produto,
+        quantidade: Number(quantidade),
+        valor: Number(valor),
+        pagamento: pagamento,
+        data: data
+
+      });
+
+      carregarVendas();
+
+      document.getElementById("produto").value = "";
+      document.getElementById("quantidade").value = "";
+      document.getElementById("valor").value = "";
+      document.getElementById("data").value = "";
+
+      alert("Venda salva!");
+
+    } catch (erro) {
+
+      console.error(erro);
+
+      alert("Erro ao salvar venda");
+
+    }
+
+  }
+
+  // CARREGAR VENDAS
+  async function carregarVendas() {
+
+    const tabela =
+      document.getElementById("tabelaVendas");
+
+    tabela.innerHTML = "";
+
+    const querySnapshot =
+      await getDocs(collection(db, "vendas"));
+
+    let totalVendido = 0;
+    let quantidadeVendas = 0;
+
+    let pagamentos = {
+      Pix: 0,
+      Dinheiro: 0,
+      Cartão: 0
+    };
+
+    querySnapshot.forEach((doc) => {
+
+      const venda = doc.data();
+
+      tabela.innerHTML += `
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+
+          <td class="py-5 font-medium text-gray-800">
+            ${venda.produto}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${venda.quantidade}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            R$ ${venda.valor}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${venda.pagamento}
+          </td>
+
+          <td class="py-5 text-gray-600">
+            ${venda.data}
+          </td>
+
+        </tr>
+      `;
+
+      totalVendido += venda.valor;
+
+      quantidadeVendas++;
+
+      pagamentos[venda.pagamento]++;
+
+    });
+
+    let maiorPagamento = "Pix";
+
+    if (
+      pagamentos["Dinheiro"] >
+      pagamentos[maiorPagamento]
+    ) {
+      maiorPagamento = "Dinheiro";
+    }
+
+    if (
+      pagamentos["Cartão"] >
+      pagamentos[maiorPagamento]
+    ) {
+      maiorPagamento = "Cartão";
+    }
+
+    document.getElementById("totalVendido").innerText =
+      `R$ ${totalVendido}`;
+
+    document.getElementById("quantidadeVendas").innerText =
+      quantidadeVendas;
+
+    document.getElementById("pagamentoMaisUsado").innerText =
+      maiorPagamento;
+
+  }
+
+  // GLOBAL
+  window.salvarVenda = salvarVenda;
+
+  // CARREGA AUTOMATICAMENTE
+  carregarVendas();
+
+</script>
+
+</body>
+</html>
