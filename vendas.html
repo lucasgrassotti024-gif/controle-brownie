@@ -14,7 +14,7 @@
   <div class="flex min-h-screen">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 bg-black text-white p-6">
+   <aside class="w-64 bg-black text-white p-6">
 
       <h1 class="text-3xl font-bold mb-10">
         Controle
@@ -33,7 +33,7 @@
         <!-- VENDAS -->
         <a
           href="vendas.html"
-          class="bg-white text-black rounded-2xl p-4 block font-medium"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           💰 Vendas
         </a>
@@ -52,6 +52,14 @@
           class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           📊 Análises
+        </a>
+
+        <!-- GRÁFICOS -->
+        <a
+          href="dashboard.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📈 Gráficos
         </a>
 
         <!-- RECLAMAÇÕES -->
@@ -254,6 +262,7 @@
                 <th class="pb-4">Valor</th>
                 <th class="pb-4">Pagamento</th>
                 <th class="pb-4">Data</th>
+                <th class="pb-4">Ações</th>
 
               </tr>
 
@@ -282,7 +291,10 @@
       getFirestore,
       collection,
       addDoc,
-      getDocs
+      getDocs,
+      deleteDoc,
+      updateDoc,
+      doc
     }
     from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
@@ -365,6 +377,78 @@
 
     }
 
+    // EXCLUIR VENDA
+    async function excluirVenda(id) {
+
+      const confirmar =
+        confirm("Deseja excluir esta venda?");
+
+      if (!confirmar) return;
+
+      try {
+
+        await deleteDoc(doc(db, "vendas", id));
+
+        carregarVendas();
+
+        alert("Venda excluída!");
+
+      } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao excluir venda");
+
+      }
+
+    }
+
+    // EDITAR VENDA
+    async function editarVenda(
+      id,
+      quantidadeAtual,
+      valorAtual
+    ) {
+
+      const novaQuantidade =
+        prompt(
+          "Nova quantidade:",
+          quantidadeAtual
+        );
+
+      if (novaQuantidade === null) return;
+
+      const novoValor =
+        prompt(
+          "Novo valor:",
+          valorAtual
+        );
+
+      if (novoValor === null) return;
+
+      try {
+
+        await updateDoc(doc(db, "vendas", id), {
+
+          quantidade: Number(novaQuantidade),
+          valor: Number(novoValor)
+
+        });
+
+        carregarVendas();
+
+        alert("Venda atualizada!");
+
+      } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao editar venda");
+
+      }
+
+    }
+
     // CARREGAR VENDAS
     async function carregarVendas() {
 
@@ -385,9 +469,9 @@
         Cartão: 0
       };
 
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach((documento) => {
 
-        const venda = doc.data();
+        const venda = documento.data();
 
         tabela.innerHTML += `
           <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
@@ -410,6 +494,32 @@
 
             <td class="py-5 text-gray-600">
               ${venda.data}
+            </td>
+
+            <td class="py-5">
+
+              <div class="flex gap-2">
+
+                <button
+                  onclick="editarVenda(
+                    '${documento.id}',
+                    '${venda.quantidade}',
+                    '${venda.valor}'
+                  )"
+                  class="bg-yellow-400 hover:bg-yellow-500 transition text-black px-4 py-2 rounded-xl text-sm font-medium"
+                >
+                  Editar
+                </button>
+
+                <button
+                  onclick="excluirVenda('${documento.id}')"
+                  class="bg-red-500 hover:bg-red-600 transition text-white px-4 py-2 rounded-xl text-sm font-medium"
+                >
+                  Excluir
+                </button>
+
+              </div>
+
             </td>
 
           </tr>
@@ -452,6 +562,8 @@
 
     // GLOBAL
     window.salvarVenda = salvarVenda;
+    window.excluirVenda = excluirVenda;
+    window.editarVenda = editarVenda;
 
     // CARREGA AUTOMATICAMENTE
     carregarVendas();

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CHART.JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black text-white p-6">
+
+      <h1 class="text-3xl font-bold mb-10">
+        Controle
+      </h1>
+
+      <div class="flex flex-col gap-3">
+
+        <!-- COMPRAS -->
+        <a
+          href="compras.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          🛒 Compras
+        </a>
+
+        <!-- VENDAS -->
+        <a
+          href="vendas.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💰 Vendas
+        </a>
+
+        <!-- ESTOQUE -->
+        <a
+          href="estoque.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          📦 Estoque
+        </a>
+
+        <!-- ANÁLISES -->
+        <a
+          href="index.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          📊 Análises
+        </a>
+
+        <!-- GRÁFICOS -->
+        <a
+          href="dashboard.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📈 Gráficos
+        </a>
+
+        <!-- RECLAMAÇÕES -->
+        <a
+          href="reclamacoes.html"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
+        >
+          💬 Reclamações
+        </a>
+
+      </div>
+
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-10">
+
+      <!-- TÍTULO -->
+      <div class="mb-10">
+
+        <h2 class="text-4xl font-bold text-gray-800">
+          Dashboard
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Visualize crescimento, lucro e produção.
+        </p>
+
+      </div>
+
+      <!-- FATURAMENTO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <div class="mb-6">
+
+          <h3 class="text-2xl font-semibold">
+            Faturamento por dia
+          </h3>
+
+          <p class="text-gray-500 mt-1">
+            Total vendido ao longo do tempo.
+          </p>
+
+        </div>
+
+        <canvas id="graficoFaturamento"></canvas>
+
+      </div>
+
+      <!-- LUCRO -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+
+        <div class="mb-6">
+
+          <h3 class="text-2xl font-semibold">
+            Lucro acumulado
+          </h3>
+
+          <p class="text-gray-500 mt-1">
+            Lucro baseado em vendas e compras.
+          </p>
+
+        </div>
+
+        <canvas id="graficoLucro"></canvas>
+
+      </div>
+
+      <!-- PRODUÇÃO X VENDAS -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+        <div class="mb-6">
+
+          <h3 class="text-2xl font-semibold">
+            Produção x vendas
+          </h3>
+
+          <p class="text-gray-500 mt-1">
+            Comparação entre brownies produzidos e vendidos.
+          </p>
+
+        </div>
+
+        <canvas id="graficoProducao"></canvas>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script type="module">
+
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+    // FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+      authDomain: "controle-brownie.firebaseapp.com",
+      projectId: "controle-brownie",
+      storageBucket: "controle-brownie.firebasestorage.app",
+      messagingSenderId: "832308524637",
+      appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+      measurementId: "G-SG0D3YZX7J"
+    };
+
+    // INICIALIZA FIREBASE
+    const app = initializeApp(firebaseConfig);
+
+    // INICIALIZA FIRESTORE
+    const db = getFirestore(app);
+
+    async function carregarGraficos() {
+
+      // BUSCA DADOS
+      const vendasSnapshot =
+        await getDocs(collection(db, "vendas"));
+
+      const comprasSnapshot =
+        await getDocs(collection(db, "compras"));
+
+      // DADOS
+      let faturamentoPorDia = {};
+      let lucroPorDia = {};
+
+      let totalCompras = 0;
+      let totalVendas = 0;
+
+      let browniesVendidos = 0;
+
+      // PRODUÇÃO
+      const producoes =
+        JSON.parse(localStorage.getItem("producoes"))
+        || [];
+
+      let receitasProduzidas = 0;
+
+      producoes.forEach((producao) => {
+
+        receitasProduzidas +=
+          Number(producao.quantidade);
+
+      });
+
+      // 1 RECEITA = 12 BROWNIES
+      const browniesProduzidos =
+        receitasProduzidas * 12;
+
+      // COMPRAS
+      comprasSnapshot.forEach((doc) => {
+
+        const compra = doc.data();
+
+        totalCompras +=
+          Number(compra.preco);
+
+        if (!lucroPorDia[compra.data]) {
+
+          lucroPorDia[compra.data] = 0;
+
+        }
+
+        lucroPorDia[compra.data] -=
+          Number(compra.preco);
+
+      });
+
+      // VENDAS
+      vendasSnapshot.forEach((doc) => {
+
+        const venda = doc.data();
+
+        totalVendas +=
+          Number(venda.valor);
+
+        browniesVendidos +=
+          Number(venda.quantidade);
+
+        // FATURAMENTO
+        if (!faturamentoPorDia[venda.data]) {
+
+          faturamentoPorDia[venda.data] = 0;
+
+        }
+
+        faturamentoPorDia[venda.data] +=
+          Number(venda.valor);
+
+        // LUCRO
+        if (!lucroPorDia[venda.data]) {
+
+          lucroPorDia[venda.data] = 0;
+
+        }
+
+        lucroPorDia[venda.data] +=
+          Number(venda.valor);
+
+      });
+
+      // FATURAMENTO
+      new Chart(
+        document.getElementById("graficoFaturamento"),
+        {
+          type: "line",
+
+          data: {
+
+            labels:
+              Object.keys(faturamentoPorDia),
+
+            datasets: [{
+
+              label: "Faturamento",
+
+              data:
+                Object.values(faturamentoPorDia),
+
+              borderWidth: 3,
+
+              tension: 0.3
+
+            }]
+
+          }
+
+        }
+      );
+
+      // LUCRO
+      new Chart(
+        document.getElementById("graficoLucro"),
+        {
+          type: "bar",
+
+          data: {
+
+            labels:
+              Object.keys(lucroPorDia),
+
+            datasets: [{
+
+              label: "Lucro",
+
+              data:
+                Object.values(lucroPorDia),
+
+              borderWidth: 2
+
+            }]
+
+          }
+
+        }
+      );
+
+      // PRODUÇÃO X VENDA
+      new Chart(
+        document.getElementById("graficoProducao"),
+        {
+          type: "doughnut",
+
+          data: {
+
+            labels: [
+              "Produzidos",
+              "Vendidos",
+              "Sobra"
+            ],
+
+            datasets: [{
+
+              data: [
+
+                browniesProduzidos,
+
+                browniesVendidos,
+
+                browniesProduzidos -
+                browniesVendidos
+
+              ]
+
+            }]
+
+          }
+
+        }
+      );
+
+    }
+
+    carregarGraficos();
+
+  </script>
+
+</body>
+</html>

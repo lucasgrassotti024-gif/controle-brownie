@@ -25,7 +25,7 @@
         <!-- COMPRAS -->
         <a
           href="compras.html"
-          class="bg-white text-black rounded-2xl p-4 block font-medium"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           🛒 Compras
         </a>
@@ -52,6 +52,14 @@
           class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           📊 Análises
+        </a>
+
+        <!-- GRÁFICOS -->
+        <a
+          href="dashboard.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📈 Gráficos
         </a>
 
         <!-- RECLAMAÇÕES -->
@@ -209,6 +217,7 @@
                 <th class="pb-4">Quantidade</th>
                 <th class="pb-4">Preço</th>
                 <th class="pb-4">Data</th>
+                <th class="pb-4">Ações</th>
 
               </tr>
 
@@ -237,7 +246,10 @@
       getFirestore,
       collection,
       addDoc,
-      getDocs
+      getDocs,
+      deleteDoc,
+      updateDoc,
+      doc
     }
     from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
@@ -291,7 +303,6 @@
 
       try {
 
-        // SALVA NO FIREBASE
         await addDoc(collection(db, "compras"), {
 
           ingrediente: ingrediente,
@@ -302,14 +313,13 @@
 
         });
 
-        // RECARREGA TABELA
-        carregarCompras();
-
         // LIMPA INPUTS
         document.getElementById("ingrediente").value = "";
         document.getElementById("quantidade").value = "";
         document.getElementById("preco").value = "";
         document.getElementById("data").value = "";
+
+        carregarCompras();
 
         alert("Compra salva!");
 
@@ -318,6 +328,74 @@
         console.error(erro);
 
         alert("Erro ao salvar");
+
+      }
+
+    }
+
+    // EXCLUIR COMPRA
+    async function excluirCompra(id) {
+
+      const confirmar =
+        confirm("Deseja excluir esta compra?");
+
+      if (!confirmar) return;
+
+      try {
+
+        await deleteDoc(doc(db, "compras", id));
+
+        carregarCompras();
+
+        alert("Compra excluída!");
+
+      } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao excluir");
+
+      }
+
+    }
+
+    // EDITAR COMPRA
+    async function editarCompra(id, precoAtual, quantidadeAtual) {
+
+      const novaQuantidade =
+        prompt(
+          "Nova quantidade:",
+          quantidadeAtual
+        );
+
+      if (novaQuantidade === null) return;
+
+      const novoPreco =
+        prompt(
+          "Novo preço:",
+          precoAtual
+        );
+
+      if (novoPreco === null) return;
+
+      try {
+
+        await updateDoc(doc(db, "compras", id), {
+
+          quantidade: Number(novaQuantidade),
+          preco: Number(novoPreco)
+
+        });
+
+        carregarCompras();
+
+        alert("Compra atualizada!");
+
+      } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao editar");
 
       }
 
@@ -334,9 +412,9 @@
       const querySnapshot =
         await getDocs(collection(db, "compras"));
 
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach((documento) => {
 
-        const compra = doc.data();
+        const compra = documento.data();
 
         tabela.innerHTML += `
           <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
@@ -357,6 +435,32 @@
               ${compra.data}
             </td>
 
+            <td class="py-5">
+
+              <div class="flex gap-2">
+
+                <button
+                  onclick="editarCompra(
+                    '${documento.id}',
+                    '${compra.preco}',
+                    '${compra.quantidade}'
+                  )"
+                  class="bg-yellow-400 hover:bg-yellow-500 transition text-black px-4 py-2 rounded-xl text-sm font-medium"
+                >
+                  Editar
+                </button>
+
+                <button
+                  onclick="excluirCompra('${documento.id}')"
+                  class="bg-red-500 hover:bg-red-600 transition text-white px-4 py-2 rounded-xl text-sm font-medium"
+                >
+                  Excluir
+                </button>
+
+              </div>
+
+            </td>
+
           </tr>
         `;
 
@@ -364,8 +468,10 @@
 
     }
 
-    // DEIXA FUNÇÃO GLOBAL
+    // GLOBAL
     window.salvarCompra = salvarCompra;
+    window.excluirCompra = excluirCompra;
+    window.editarCompra = editarCompra;
 
     // CARREGA AUTOMATICAMENTE
     carregarCompras();
