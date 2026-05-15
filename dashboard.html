@@ -17,7 +17,7 @@
   <div class="flex min-h-screen">
 
     <!-- SIDEBAR -->
-   <aside class="w-64 bg-black text-white p-6">
+    <aside class="w-64 bg-black text-white p-6">
 
       <h1 class="text-3xl font-bold mb-10">
         Controle
@@ -28,7 +28,7 @@
         <!-- COMPRAS -->
         <a
           href="compras.html"
-          class="bg-white text-black rounded-2xl p-4 block font-medium"
+          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
         >
           🛒 Compras
         </a>
@@ -57,6 +57,14 @@
           📊 Análises
         </a>
 
+        <!-- DASHBOARD -->
+        <a
+          href="dashboard.html"
+          class="bg-white text-black rounded-2xl p-4 block font-medium"
+        >
+          📈 Dashboard
+        </a>
+
         <!-- RECLAMAÇÕES -->
         <a
           href="reclamacoes.html"
@@ -65,19 +73,12 @@
           💬 Reclamações
         </a>
 
-        <a
-          href="dashboard.html"
-          class="bg-white/10 hover:bg-white/20 transition rounded-2xl p-4 block"
-        >
-          📈 Dashboard
-        </a>
-
-        </div>
+      </div>
 
     </aside>
 
     <!-- CONTEÚDO -->
-    <main class="flex-1 p-10">
+    <main class="flex-1 p-10 overflow-hidden">
 
       <!-- TÍTULO -->
       <div class="mb-10">
@@ -92,60 +93,77 @@
 
       </div>
 
-      <!-- FATURAMENTO -->
-      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+      <!-- GRID -->
+      <div class="grid grid-cols-1 gap-8">
 
-        <div class="mb-6">
+        <!-- FATURAMENTO -->
+        <div class="bg-white rounded-3xl p-8 shadow-sm">
 
-          <h3 class="text-2xl font-semibold">
-            Faturamento por dia
-          </h3>
+          <div class="mb-6">
 
-          <p class="text-gray-500 mt-1">
-            Total vendido ao longo do tempo.
-          </p>
+            <h3 class="text-2xl font-semibold text-gray-800">
+              Faturamento por dia
+            </h3>
 
-        </div>
+            <p class="text-gray-500 mt-1">
+              Total vendido ao longo do tempo.
+            </p>
 
-        <canvas id="graficoFaturamento"></canvas>
+          </div>
 
-      </div>
+          <div class="relative h-[350px] w-full">
 
-      <!-- LUCRO -->
-      <div class="bg-white rounded-3xl p-8 shadow-sm mb-8">
+            <canvas id="graficoFaturamento"></canvas>
 
-        <div class="mb-6">
-
-          <h3 class="text-2xl font-semibold">
-            Lucro acumulado
-          </h3>
-
-          <p class="text-gray-500 mt-1">
-            Lucro baseado em vendas e compras.
-          </p>
+          </div>
 
         </div>
 
-        <canvas id="graficoLucro"></canvas>
+        <!-- LUCRO -->
+        <div class="bg-white rounded-3xl p-8 shadow-sm">
 
-      </div>
+          <div class="mb-6">
 
-      <!-- PRODUÇÃO X VENDAS -->
-      <div class="bg-white rounded-3xl p-8 shadow-sm">
+            <h3 class="text-2xl font-semibold text-gray-800">
+              Lucro acumulado
+            </h3>
 
-        <div class="mb-6">
+            <p class="text-gray-500 mt-1">
+              Lucro baseado em vendas e compras.
+            </p>
 
-          <h3 class="text-2xl font-semibold">
-            Produção x vendas
-          </h3>
+          </div>
 
-          <p class="text-gray-500 mt-1">
-            Comparação entre brownies produzidos e vendidos.
-          </p>
+          <div class="relative h-[350px] w-full">
+
+            <canvas id="graficoLucro"></canvas>
+
+          </div>
 
         </div>
 
-        <canvas id="graficoProducao"></canvas>
+        <!-- PRODUÇÃO X VENDAS -->
+        <div class="bg-white rounded-3xl p-8 shadow-sm">
+
+          <div class="mb-6">
+
+            <h3 class="text-2xl font-semibold text-gray-800">
+              Produção x vendas
+            </h3>
+
+            <p class="text-gray-500 mt-1">
+              Comparação entre brownies produzidos e vendidos.
+            </p>
+
+          </div>
+
+          <div class="relative h-[350px] w-full flex items-center justify-center">
+
+            <canvas id="graficoProducao"></canvas>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -195,9 +213,6 @@
       let faturamentoPorDia = {};
       let lucroPorDia = {};
 
-      let totalCompras = 0;
-      let totalVendas = 0;
-
       let browniesVendidos = 0;
 
       // PRODUÇÃO
@@ -223,9 +238,6 @@
 
         const compra = doc.data();
 
-        totalCompras +=
-          Number(compra.preco);
-
         if (!lucroPorDia[compra.data]) {
 
           lucroPorDia[compra.data] = 0;
@@ -241,9 +253,6 @@
       vendasSnapshot.forEach((doc) => {
 
         const venda = doc.data();
-
-        totalVendas +=
-          Number(venda.valor);
 
         browniesVendidos +=
           Number(venda.quantidade);
@@ -270,6 +279,23 @@
 
       });
 
+      // ORDENA DATAS
+      const datasFaturamento =
+        Object.keys(faturamentoPorDia).sort();
+
+      const valoresFaturamento =
+        datasFaturamento.map(
+          data => faturamentoPorDia[data]
+        );
+
+      const datasLucro =
+        Object.keys(lucroPorDia).sort();
+
+      const valoresLucro =
+        datasLucro.map(
+          data => lucroPorDia[data]
+        );
+
       // FATURAMENTO
       new Chart(
         document.getElementById("graficoFaturamento"),
@@ -278,53 +304,203 @@
 
           data: {
 
-            labels:
-              Object.keys(faturamentoPorDia),
+            labels: datasFaturamento,
 
             datasets: [{
 
               label: "Faturamento",
 
-              data:
-                Object.values(faturamentoPorDia),
+              data: valoresFaturamento,
 
-              borderWidth: 3,
+              borderWidth: 4,
 
-              tension: 0.3
+              borderColor: "#22c55e",
+
+              backgroundColor:
+                "rgba(34,197,94,0.12)",
+
+              fill: true,
+
+              pointBackgroundColor:
+                "#22c55e",
+
+              pointBorderWidth: 0,
+
+              pointRadius: 5,
+
+              tension: 0.4
 
             }]
+
+          },
+
+          options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+              legend: {
+                display: false
+              }
+
+            },
+
+            scales: {
+
+              y: {
+
+                beginAtZero: true,
+
+                grid: {
+                  color: "#eef2f7"
+                }
+
+              },
+
+              x: {
+
+                grid: {
+                  display: false
+                }
+
+              }
+
+            }
 
           }
 
         }
       );
+
+      // MÉDIA AUTOMÁTICA
+      const somaLucro =
+        valoresLucro.reduce(
+          (acc, valor) => acc + valor,
+          0
+        );
+
+      const mediaLucro =
+        somaLucro / valoresLucro.length;
+
+      // LINHA DA MÉDIA
+      const linhaMedia =
+        new Array(valoresLucro.length)
+        .fill(mediaLucro);
 
       // LUCRO
       new Chart(
         document.getElementById("graficoLucro"),
         {
-          type: "bar",
+          type: "line",
 
           data: {
 
-            labels:
-              Object.keys(lucroPorDia),
+            labels: datasLucro,
 
-            datasets: [{
+            datasets: [
 
-              label: "Lucro",
+              {
 
-              data:
-                Object.values(lucroPorDia),
+                label: "Lucro",
 
-              borderWidth: 2
+                data: valoresLucro,
 
-            }]
+                borderWidth: 4,
+
+                borderColor: "#3b82f6",
+
+                backgroundColor:
+                  "rgba(59,130,246,0.12)",
+
+                fill: true,
+
+                pointBackgroundColor:
+                  "#3b82f6",
+
+                pointRadius: 5,
+
+                tension: 0.4
+
+              },
+
+              {
+
+                label: "Média",
+
+                data: linhaMedia,
+
+                borderColor: "#ef4444",
+
+                borderWidth: 2,
+
+                borderDash: [10, 8],
+
+                pointRadius: 0,
+
+                fill: false
+
+              }
+
+            ]
+
+          },
+
+          options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+              legend: {
+
+                labels: {
+
+                  usePointStyle: true,
+
+                  pointStyle: "circle"
+
+                }
+
+              }
+
+            },
+
+            scales: {
+
+              y: {
+
+                beginAtZero: true,
+
+                grid: {
+                  color: "#eef2f7"
+                }
+
+              },
+
+              x: {
+
+                grid: {
+                  display: false
+                }
+
+              }
+
+            }
 
           }
 
         }
       );
+
+      // SOBRA
+      const sobra =
+        browniesProduzidos -
+        browniesVendidos;
 
       // PRODUÇÃO X VENDA
       new Chart(
@@ -348,12 +524,57 @@
 
                 browniesVendidos,
 
-                browniesProduzidos -
-                browniesVendidos
+                sobra > 0 ? sobra : 0
 
-              ]
+              ],
+
+              backgroundColor: [
+
+                "#22c55e",
+                "#3b82f6",
+                "#f59e0b"
+
+              ],
+
+              borderWidth: 0,
+
+              hoverOffset: 12
 
             }]
+
+          },
+
+          options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: "78%",
+
+            plugins: {
+
+              legend: {
+
+                position: "bottom",
+
+                labels: {
+
+                  padding: 20,
+
+                  usePointStyle: true,
+
+                  pointStyle: "circle",
+
+                  font: {
+                    size: 14
+                  }
+
+                }
+
+              }
+
+            }
 
           }
 
