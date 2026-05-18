@@ -278,203 +278,211 @@
 
   <script type="module">
 
-    import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    deleteDoc,
+    updateDoc,
+    doc
+  }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-    // FIREBASE CONFIG
-    const firebaseConfig = {
-      apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
-      authDomain: "controle-brownie.firebaseapp.com",
-      projectId: "controle-brownie",
-      storageBucket: "controle-brownie.firebasestorage.app",
-      messagingSenderId: "832308524637",
-      appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
-      measurementId: "G-SG0D3YZX7J"
-    };
+  // FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9xakSVE2Yafluo4PQFcXfXDSoNWMWRGM",
+    authDomain: "controle-brownie.firebaseapp.com",
+    projectId: "controle-brownie",
+    storageBucket: "controle-brownie.firebasestorage.app",
+    messagingSenderId: "832308524637",
+    appId: "1:832308524637:web:8c4bc27d5b6745a2c7bfb4",
+    measurementId: "G-SG0D3YZX7J"
+  };
 
-    // INICIALIZA FIREBASE
-    const app = initializeApp(firebaseConfig);
+  // INICIALIZA FIREBASE
+  const app = initializeApp(firebaseConfig);
 
-    // INICIALIZA FIRESTORE
-    const db = getFirestore(app);
+  // INICIALIZA FIRESTORE
+  const db = getFirestore(app);
 
-    // RECEITA PADRÃO
-    const receitaBrownie = [
-      {
-        ingrediente: "Açúcar",
-        quantidade: 380,
-        unidade: "g"
-      },
+  // RECEITA PADRÃO
+  const receitaBrownie = [
 
-      {
-        ingrediente: "Ovo",
-        quantidade: 5,
-        unidade: "un"
-      },
+    {
+      ingrediente: "Açúcar",
+      quantidade: 380,
+      unidade: "g"
+    },
 
-      {
-        ingrediente: "Óleo",
-        quantidade: 220,
-        unidade: "ml"
-      },
+    {
+      ingrediente: "Ovo",
+      quantidade: 5,
+      unidade: "un"
+    },
 
-      {
-        ingrediente: "Chocolate ao leite",
-        quantidade: 150,
-        unidade: "g"
-      },
+    {
+      ingrediente: "Óleo",
+      quantidade: 220,
+      unidade: "ml"
+    },
 
-      {
-        ingrediente: "Chocolate 50%",
-        quantidade: 65,
-        unidade: "g"
-      },
+    {
+      ingrediente: "Chocolate ao leite",
+      quantidade: 150,
+      unidade: "g"
+    },
 
-      {
-        ingrediente: "Farinha",
-        quantidade: 120,
-        unidade: "g"
-      }
-    ];
+    {
+      ingrediente: "Chocolate 50%",
+      quantidade: 100,
+      unidade: "g"
+    },
 
-    // CARREGAR ESTOQUE
-    async function carregarEstoque() {
-
-      const tabela =
-        document.getElementById("tabelaEstoque");
-
-      tabela.innerHTML = "";
-
-      const comprasSnapshot =
-        await getDocs(collection(db, "compras"));
-
-      const estoque = {};
-
-      // SOMA COMPRAS
-      comprasSnapshot.forEach((doc) => {
-
-        const compra = doc.data();
-
-        const nome =
-          compra.ingrediente;
-
-        if (!estoque[nome]) {
-
-          estoque[nome] = {
-            quantidade: 0,
-            unidade: compra.unidade
-          };
-
-        }
-
-        estoque[nome].quantidade +=
-          Number(compra.quantidade);
-
-      });
-
-      // PRODUÇÕES
-      const producoes =
-        JSON.parse(localStorage.getItem("producoes"))
-        || [];
-
-      producoes.forEach((producao) => {
-
-        receitaBrownie.forEach((item) => {
-
-          const totalUsado =
-            item.quantidade *
-            producao.quantidade;
-
-          if (estoque[item.ingrediente]) {
-
-            estoque[item.ingrediente]
-              .quantidade -= totalUsado;
-
-          }
-
-        });
-
-      });
-
-      // MOSTRAR ESTOQUE
-      for (let item in estoque) {
-
-        let status = "Bom";
-        let cor = "text-green-600";
-
-        if (estoque[item].quantidade < 1000) {
-
-          status = "Médio";
-          cor = "text-yellow-600";
-
-        }
-
-        if (estoque[item].quantidade < 300) {
-
-          status = "Baixo";
-          cor = "text-red-600";
-
-        }
-
-        tabela.innerHTML += `
-          <tr class="border-b border-gray-100">
-
-            <td class="py-5">
-              ${item}
-            </td>
-
-            <td class="py-5">
-              ${estoque[item].quantidade}${estoque[item].unidade}
-            </td>
-
-            <td class="py-5 ${cor} font-medium">
-              ${status}
-            </td>
-
-          </tr>
-        `;
-
-      }
-
+    {
+      ingrediente: "Farinha",
+      quantidade: 120,
+      unidade: "g"
     }
 
-    // REGISTRAR PRODUÇÃO
-    function registrarProducao() {
+  ];
 
-      const quantidade =
-        document.getElementById(
-          "quantidadeProduzida"
-        ).value;
+  // CARREGAR ESTOQUE
+  async function carregarEstoque() {
 
-      if (quantidade === "") {
+    const tabela =
+      document.getElementById("tabelaEstoque");
 
-        alert("Digite uma quantidade");
+    tabela.innerHTML = "";
 
-        return;
+    const comprasSnapshot =
+      await getDocs(collection(db, "compras"));
+
+    const producoesSnapshot =
+      await getDocs(collection(db, "producoes"));
+
+    const estoque = {};
+
+    // SOMA COMPRAS
+    comprasSnapshot.forEach((doc) => {
+
+      const compra = doc.data();
+
+      const nome =
+        compra.ingrediente;
+
+      if (!estoque[nome]) {
+
+        estoque[nome] = {
+          quantidade: 0,
+          unidade: compra.unidade
+        };
 
       }
 
-      const producoes =
-        JSON.parse(localStorage.getItem("producoes"))
-        || [];
+      estoque[nome].quantidade +=
+        Number(compra.quantidade);
 
-      producoes.push({
+    });
 
-        produto: "Brownie",
-        quantidade: Number(quantidade)
+    // PRODUÇÕES
+    producoesSnapshot.forEach((documento) => {
+
+      const producao =
+        documento.data();
+
+      receitaBrownie.forEach((item) => {
+
+        const totalUsado =
+          item.quantidade *
+          producao.quantidade;
+
+        if (estoque[item.ingrediente]) {
+
+          estoque[item.ingrediente]
+            .quantidade -= totalUsado;
+
+        }
 
       });
 
-      localStorage.setItem(
-        "producoes",
-        JSON.stringify(producoes)
+    });
+
+    // MOSTRAR ESTOQUE
+    for (let item in estoque) {
+
+      let status = "Bom";
+      let cor = "text-green-600";
+
+      if (estoque[item].quantidade < 1000) {
+
+        status = "Médio";
+        cor = "text-yellow-600";
+
+      }
+
+      if (estoque[item].quantidade < 300) {
+
+        status = "Baixo";
+        cor = "text-red-600";
+
+      }
+
+      tabela.innerHTML += `
+        <tr class="border-b border-gray-100">
+
+          <td class="py-5">
+            ${item}
+          </td>
+
+          <td class="py-5">
+            ${estoque[item].quantidade}${estoque[item].unidade}
+          </td>
+
+          <td class="py-5 ${cor} font-medium">
+            ${status}
+          </td>
+
+        </tr>
+      `;
+
+    }
+
+    carregarProducoes();
+
+  }
+
+  // REGISTRAR PRODUÇÃO
+  async function registrarProducao() {
+
+    const quantidade =
+      document.getElementById(
+        "quantidadeProduzida"
+      ).value;
+
+    if (quantidade === "") {
+
+      alert("Digite uma quantidade");
+
+      return;
+
+    }
+
+    try {
+
+      await addDoc(
+        collection(db, "producoes"),
+        {
+
+          produto: "Brownie",
+
+          quantidade:
+            Number(quantidade)
+
+        }
       );
 
       document.getElementById(
@@ -485,16 +493,212 @@
 
       alert("Produção registrada!");
 
+    } catch (erro) {
+
+      console.error(erro);
+
+      alert("Erro ao registrar");
+
     }
 
-    // GLOBAL
-    window.registrarProducao =
-      registrarProducao;
+  }
 
-    // INICIAR
-    carregarEstoque();
+  // CARREGAR PRODUÇÕES
+  async function carregarProducoes() {
 
-  </script>
+    let tabelaProducoes =
+      document.getElementById(
+        "tabelaProducoes"
+      );
+
+    // CRIA TABELA SE NÃO EXISTIR
+    if (!tabelaProducoes) {
+
+      const container =
+        document.querySelectorAll(
+          ".bg-white.rounded-3xl.p-8.shadow-sm"
+        )[2];
+
+      container.innerHTML += `
+
+        <div class="mt-10">
+
+          <h3 class="text-2xl font-semibold mb-6">
+            Produções registradas
+          </h3>
+
+          <div class="overflow-x-auto">
+
+            <table class="w-full">
+
+              <thead>
+
+                <tr class="border-b border-gray-200 text-left text-gray-500">
+
+                  <th class="pb-4">Produto</th>
+                  <th class="pb-4">Quantidade</th>
+                  <th class="pb-4">Ações</th>
+
+                </tr>
+
+              </thead>
+
+              <tbody id="tabelaProducoes"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      `;
+
+      tabelaProducoes =
+        document.getElementById(
+          "tabelaProducoes"
+        );
+
+    }
+
+    tabelaProducoes.innerHTML = "";
+
+    const producoesSnapshot =
+      await getDocs(collection(db, "producoes"));
+
+    producoesSnapshot.forEach((documento) => {
+
+      const producao =
+        documento.data();
+
+      tabelaProducoes.innerHTML += `
+        <tr class="border-b border-gray-100">
+
+          <td class="py-5">
+            ${producao.produto}
+          </td>
+
+          <td class="py-5">
+            ${producao.quantidade}
+          </td>
+
+          <td class="py-5">
+
+            <div class="flex gap-2">
+
+              <button
+                onclick="editarProducao(
+                  '${documento.id}',
+                  '${producao.quantidade}'
+                )"
+                class="bg-yellow-400 hover:bg-yellow-500 transition text-black px-4 py-2 rounded-xl text-sm font-medium"
+              >
+                Editar
+              </button>
+
+              <button
+                onclick="excluirProducao(
+                  '${documento.id}'
+                )"
+                class="bg-red-500 hover:bg-red-600 transition text-white px-4 py-2 rounded-xl text-sm font-medium"
+              >
+                Excluir
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+      `;
+
+    });
+
+  }
+
+  // EXCLUIR
+  async function excluirProducao(id) {
+
+    const confirmar =
+      confirm(
+        "Deseja excluir esta produção?"
+      );
+
+    if (!confirmar) return;
+
+    try {
+
+      await deleteDoc(
+        doc(db, "producoes", id)
+      );
+
+      carregarEstoque();
+
+      alert("Produção excluída!");
+
+    } catch (erro) {
+
+      console.error(erro);
+
+      alert("Erro ao excluir");
+
+    }
+
+  }
+
+  // EDITAR
+  async function editarProducao(
+    id,
+    quantidadeAtual
+  ) {
+
+    const novaQuantidade =
+      prompt(
+        "Nova quantidade:",
+        quantidadeAtual
+      );
+
+    if (novaQuantidade === null) return;
+
+    try {
+
+      await updateDoc(
+        doc(db, "producoes", id),
+        {
+
+          quantidade:
+            Number(novaQuantidade)
+
+        }
+      );
+
+      carregarEstoque();
+
+      alert("Produção atualizada!");
+
+    } catch (erro) {
+
+      console.error(erro);
+
+      alert("Erro ao editar");
+
+    }
+
+  }
+
+  // GLOBAL
+  window.registrarProducao =
+    registrarProducao;
+
+  window.excluirProducao =
+    excluirProducao;
+
+  window.editarProducao =
+    editarProducao;
+
+  // INICIAR
+  carregarEstoque();
+
+</script>
 
 </body>
 </html>
